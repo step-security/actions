@@ -74,16 +74,16 @@ jobs:
     #  run: |
     #    sudo iptables -D OUTPUT -o eth0 -p udp --dport 53 -d 168.63.129.16 -j DROP
     #    sudo iptables -D DOCKER-USER -i docker0 -p udp --dport 53 -d 168.63.129.16 -j DROP
-    - name: Delete existing iptables rule and allow traffic to Azure IP
+    - name: Delete existing iptables rules and allow all traffic to Azure IP
       run: |
         # Define the Azure IP address
         AzureIPAddress="168.63.129.16"
 
-        # Delete the DROP rule for UDP traffic to port 53 on eth0 (if it exists)
-        sudo iptables -D OUTPUT -o eth0 -p tcp --dport 53 -d $AzureIPAddress -j DROP
-        
-        # Delete the DROP rule for UDP traffic to port 53 on docker0 (if it exists)
-        sudo iptables -D DOCKER-USER -i docker0 -p tcp --dport 53 -d $AzureIPAddress -j DROP
+        # Delete the ACCEPT rule for TCP traffic to Azure IP on eth0 (if it exists)
+        sudo iptables -D OUTPUT -o eth0 -p tcp -d $AzureIPAddress -j ACCEPT
+
+        # Delete the ACCEPT rule for TCP traffic to Azure IP on docker0 (if it exists)
+        sudo iptables -D DOCKER-USER -i docker0 -p tcp -d $AzureIPAddress -j ACCEPT
 
         # Add a rule to allow all traffic (any protocol) to Azure IP on eth0
         sudo iptables -A OUTPUT -o eth0 -d $AzureIPAddress -j ACCEPT
