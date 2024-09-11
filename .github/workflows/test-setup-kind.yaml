@@ -85,11 +85,11 @@ jobs:
         # Delete the ACCEPT rule for TCP traffic to Azure IP on docker0 (if it exists)
         sudo iptables -D DOCKER-USER -i docker0 -p tcp -d $AzureIPAddress -j ACCEPT
 
-        # Add a rule to allow all traffic (any protocol) to Azure IP on eth0
-        sudo iptables -A OUTPUT -o eth0 -d $AzureIPAddress -j ACCEPT
+        # Insert a rule to allow all traffic (any protocol) to Azure IP on eth0 at the top of the OUTPUT chain
+        sudo iptables -I OUTPUT 1 -o eth0 -d $AzureIPAddress -j ACCEPT
 
-        # Add a rule to allow all traffic (any protocol) to Azure IP on docker0
-        sudo iptables -A DOCKER-USER -i docker0 -d $AzureIPAddress -j ACCEPT
+        # Insert a rule to allow all traffic (any protocol) to Azure IP on docker0 at the top of the DOCKER-USER chain
+        sudo iptables -I DOCKER-USER 1 -i docker0 -d $AzureIPAddress -j ACCEPT
     
     - name: Checkout the current action
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
