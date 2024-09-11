@@ -50,7 +50,7 @@ jobs:
           knative-version: 1.13.0
 
     steps:
-    - uses: step-security/harden-runner@int-sh
+    - uses: step-security/harden-runner@rc
       with:
         egress-policy: audit
         allowed-endpoints: >
