@@ -50,7 +50,7 @@ jobs:
           knative-version: 1.13.0
 
     steps:
-    - uses: step-security/harden-runner@v2.10.0
+    - uses: step-security/harden-runner@int-sh
       with:
         egress-policy: block
         allowed-endpoints: >
@@ -74,22 +74,7 @@ jobs:
     #  run: |
     #    sudo iptables -D OUTPUT -o eth0 -p udp --dport 53 -d 168.63.129.16 -j DROP
     #    sudo iptables -D DOCKER-USER -i docker0 -p udp --dport 53 -d 168.63.129.16 -j DROP
-    - name: Delete existing iptables rules and allow all traffic to Azure IP
-      run: |
-        # Define the Azure IP address
-        AzureIPAddress="168.63.129.16"
-
-        # Delete the ACCEPT rule for TCP traffic to Azure IP on eth0 (if it exists)
-        sudo iptables -D OUTPUT -o eth0 -p tcp -d $AzureIPAddress -j ACCEPT
-
-        # Delete the ACCEPT rule for TCP traffic to Azure IP on docker0 (if it exists)
-        sudo iptables -D DOCKER-USER -i docker0 -p tcp -d $AzureIPAddress -j ACCEPT
-
-        # Insert a rule to allow all traffic (any protocol) to Azure IP on eth0 at the top of the OUTPUT chain
-        sudo iptables -I OUTPUT 1 -o eth0 -d $AzureIPAddress -j ACCEPT
-
-        # Insert a rule to allow all traffic (any protocol) to Azure IP on docker0 at the top of the DOCKER-USER chain
-        sudo iptables -I DOCKER-USER 1 -i docker0 -d $AzureIPAddress -j ACCEPT
+    
     
     - name: Checkout the current action
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
