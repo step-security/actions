@@ -101,7 +101,8 @@ jobs:
       with:
         version: ${{ matrix.knative-version || 'latest' }}
 
-    - run: sudo iptables -L -v -n 
+    - run: sudo iptables -L -v -n
+      if: ${{ failure() }}
     
     - name: Collect diagnostics
       if: ${{ failure() }}
