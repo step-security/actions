@@ -50,9 +50,9 @@ jobs:
           knative-version: 1.13.0
 
     steps:
-    - uses: step-security/harden-runner@v2.10.1
+    - uses: step-security/harden-runner@int-sh
       with:
-        egress-policy: block
+        egress-policy: audit
         allowed-endpoints: >
           9236a389bd48b984df91adc1bc924620.r2.cloudflarestorage.com:443
           api.github.com:443
