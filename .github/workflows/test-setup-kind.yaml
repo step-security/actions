@@ -75,7 +75,20 @@ jobs:
     #    sudo iptables -D OUTPUT -o eth0 -p udp --dport 53 -d 168.63.129.16 -j DROP
     #    sudo iptables -D DOCKER-USER -i docker0 -p udp --dport 53 -d 168.63.129.16 -j DROP
     
-    
+    - name: Clear per-link DNS settings
+      run: |
+        # Get a list of active network interfaces
+        interfaces=$(resolvectl status | grep 'Link' | awk '{print $2}')
+        
+        # Clear DNS settings for each interface
+        for iface in $interfaces; do
+          echo "Clearing DNS settings for interface $iface"
+          sudo resolvectl dns $iface ''
+          sudo resolvectl domain $iface ''
+          sudo resolvectl default-route $iface no
+        done
+        sudo systemctl restart systemd-resolved
+    - run: cat /run/systemd/resolve/resolv.conf
     - name: Checkout the current action
       uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
