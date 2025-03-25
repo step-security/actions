@@ -2,6 +2,9 @@ name: test-setup-registry
 
 on: [pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   test-mem:
     runs-on: ubuntu-latest
