@@ -3,6 +3,9 @@ name: test-gitsign
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test_gitsign_action:
 
@@ -19,6 +22,11 @@ jobs:
 
     name: Install Gitsign and test presence in path
     steps:
+    - name: Harden the runner (Audit all outbound calls)
+      uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+      with:
+        egress-policy: audit
+
     - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
     - id: changed-gitsign

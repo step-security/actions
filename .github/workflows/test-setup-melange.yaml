@@ -3,6 +3,9 @@ name: test-setup-melange
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test-setup-melange:
     runs-on: ubuntu-latest
